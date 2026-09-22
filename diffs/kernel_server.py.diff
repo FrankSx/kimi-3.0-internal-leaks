@@ -1,0 +1,126 @@
+--- /tmp/kimi_arch/kimi-2.0-internal-leaks/kernel_server.py	2026-09-22 17:59:19.422968233 +0800
++++ /app/kernel_server.py	2026-08-12 19:43:25.000000000 +0800
+@@ -1,9 +1,10 @@
+ #!/usr/bin/env python3
+ """
+ Jupyter Kernel Management Server
+-提供 kernel 的 reset、interrupt 和 connectionFile 查询接口
++提供 kernel 的 reset、interrupt、execute 和 connectionFile 查询接口
+ """
+ 
++import asyncio
+ import logging
+ from contextlib import asynccontextmanager
+ from typing import Dict, Any, Optional
+@@ -12,7 +13,7 @@
+ from fastapi import FastAPI, HTTPException
+ from fastapi.middleware.cors import CORSMiddleware
+ from fastapi.responses import JSONResponse
+-from pydantic import BaseModel
++from pydantic import BaseModel, Field
+ 
+ from jupyter_kernel import JupyterKernel
+ 
+@@ -24,6 +25,7 @@
+ 
+ # 全局 kernel 实例
+ kernel_instance: Optional[JupyterKernel] = None
++kernel_execution_lock = asyncio.Lock()
+ 
+ 
+ @asynccontextmanager
+@@ -48,7 +50,7 @@
+ # 创建 FastAPI 应用
+ app = FastAPI(
+     title="Jupyter Kernel Management Server",
+-    description="提供 Jupyter Kernel 的管理接口，包括重置、中断和连接信息查询",
++    description="提供 Jupyter Kernel 的管理接口，包括重置、中断、连接信息查询和代码执行",
+     version="1.0.0",
+     lifespan=lifespan,
+ )
+@@ -93,6 +95,23 @@
+     message: Optional[str] = None
+ 
+ 
++class KernelExecuteRequest(BaseModel):
++    """Kernel 执行请求模型"""
++
++    code: str
++    timeout: float = Field(default=30, gt=0)
++    restart: bool = False
++
++
++class KernelExecuteResponse(BaseModel):
++    """Kernel 执行响应模型"""
++
++    success: bool
++    output: str = ""
++    error: Optional[str] = None
++    images: Optional[list[str]] = None
++
++
+ # API 路由
+ @app.get("/", response_model=Dict[str, str])
+ async def root():
+@@ -126,7 +145,8 @@
+ 
+     try:
+         logger.info("收到 kernel 重置请求")
+-        result = kernel_instance.reset_kernel()
++        async with kernel_execution_lock:
++            result = await asyncio.to_thread(kernel_instance.reset_kernel)
+ 
+         if result.get("success"):
+             logger.info(f"Kernel 重置成功: {result.get('message')}")
+@@ -177,6 +197,51 @@
+         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+ 
+ 
++@app.post("/kernel/execute", response_model=KernelExecuteResponse)
++async def execute_kernel(request: KernelExecuteRequest):
++    """执行 Python 代码"""
++    global kernel_instance
++    if not kernel_instance:
++        raise HTTPException(status_code=503, detail="Kernel not initialized")
++
++    try:
++        logger.info("收到 kernel 执行请求")
++        async with kernel_execution_lock:
++            if request.restart:
++                reset_result = await asyncio.to_thread(kernel_instance.reset_kernel)
++                if not reset_result.get("success"):
++                    logger.error(f"Kernel 重置失败: {reset_result.get('message')}")
++                    raise HTTPException(
++                        status_code=500,
++                        detail=reset_result.get("message", "Failed to reset kernel"),
++                    )
++
++            init_result = await asyncio.to_thread(kernel_instance.run_init_script_if_needed)
++            if init_result is not None and not init_result.success:
++                logger.error(f"Kernel 初始化脚本执行失败: {init_result.error}")
++                raise HTTPException(
++                    status_code=500,
++                    detail=init_result.error or "Kernel initialization script failed",
++                )
++
++            result = await asyncio.to_thread(
++                kernel_instance.execute,
++                request.code,
++                timeout=request.timeout,
++            )
++        return KernelExecuteResponse(
++            success=result.success,
++            output=result.output,
++            error=result.error,
++            images=result.images or [],
++        )
++    except HTTPException:
++        raise
++    except Exception as e:
++        logger.error(f"执行 kernel 代码时发生错误: {str(e)}")
++        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
++
++
+ @app.get("/kernel/connection", response_model=ConnectionInfoResponse)
+ async def get_connection_info():
+     """获取 kernel 连接信息"""
