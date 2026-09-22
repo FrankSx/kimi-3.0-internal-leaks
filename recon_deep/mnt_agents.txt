@@ -1,0 +1,13 @@
+total 4
+-r--r--r-- 0 root root 186 Jan  1  1970 .agent-gw.json
+drwxr-xr-x 0 root root   0 Sep 23 02:18 .agents
+drwxr-xr-x 0 root root   0 Sep 23 02:17 .store
+drwxr-xr-x 0 root root   0 Sep 23 02:18 .tmp
+drwxr-xr-x 0 root root   0 Sep 23 02:18 .user
+drwxr-xr-x 0 root root   0 Sep 23 02:18 .websites-templates
+drwxr-xr-x 0 root root   0 Sep 23 02:18 automation
+drwxr-xr-x 0 root root   0 Sep 23 02:18 backup
+drwxr-xr-x 0 root root   0 Sep 23 02:17 deploy
+drwxr-xr-x 0 root root   0 Sep 23 02:18 images
+drwxr-xr-x 0 root root   0 Sep 23 02:17 output
+drwxr-xr-x 0 root root   0 Sep 23 02:17 upload

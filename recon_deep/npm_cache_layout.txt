@@ -1,0 +1,20 @@
+1.1G	/home/kimi/.npm-cache
+total 20
+drwxr-xr-x 1 kimi kimi 4096 Sep 22 17:15 .
+drwxr-xr-x 1 kimi kimi 4096 Sep 23 02:44 ..
+drwxr-xr-x 1 kimi kimi 4096 Sep 22 17:15 _cacache
+drwxr-xr-x 1 kimi kimi 4096 Sep 22 17:15 _logs
+-rw-r--r-- 1 kimi kimi    0 Sep 22 16:51 _update-notifier-last-checked
+1.1G	/home/kimi/.npm-cache/_cacache
+1.2M	/home/kimi/.npm-cache/_logs
+2026-09-14T09_51_28_531Z-debug-0.log
+2026-09-22T08_51_54_365Z-debug-0.log
+2026-09-22T08_53_18_118Z-debug-0.log
+2026-09-22T08_53_30_272Z-debug-0.log
+2026-09-22T08_53_47_286Z-debug-0.log
+2026-09-22T08_54_46_333Z-debug-0.log
+2026-09-22T08_54_50_542Z-debug-0.log
+2026-09-22T08_55_07_559Z-debug-0.log
+2026-09-22T08_55_10_125Z-debug-0.log
+2026-09-22T08_55_14_507Z-debug-0.log
+2026-09-22T08_55_29_684Z-debug-0.log

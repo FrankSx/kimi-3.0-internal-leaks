@@ -1,0 +1,3 @@
+vnc_6080 GET / -> 200
+portal_8080 GET / -> 404
+kubelet_10250 GET /pods -> 404

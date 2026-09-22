@@ -1,0 +1,25 @@
+total 100
+drwxr-xr-x 1 kimi kimi 4096 Sep 23 02:44 .
+drwxr-xr-x 1 root root 4096 Sep 22 17:15 ..
+-rw------- 1 kimi kimi  177 Sep 23 01:56 .Xauthority
+drwxr-xr-x 3 kimi kimi 4096 Sep 22 17:13 .agents
+-rw-r--r-- 1 kimi kimi  220 Jun  6  2025 .bash_logout
+-rw-r--r-- 1 kimi kimi 3744 Sep 14 17:50 .bashrc
+drwxr-xr-x 1 kimi kimi 4096 Sep 23 02:45 .cache
+drwxr-xr-x 1 kimi kimi 4096 Sep 22 17:13 .cli-tools
+drwx------ 5 kimi kimi 4096 Sep 23 02:45 .config
+drwxr-xr-x 4 kimi kimi 4096 Sep 22 17:15 .dotnet
+lrwxrwxrwx 1 kimi kimi   31 Sep 23 02:44 .dws -> /mnt/agents/.user/auth/dws/.dws
+-rw-r--r-- 1 kimi kimi   70 Sep 15 18:16 .gitconfig
+drwxr-xr-x 3 kimi kimi 4096 Sep 23 01:56 .ipython
+drwxr-xr-x 2 kimi kimi 4096 Sep 23 02:44 .kimi
+drwxr-xr-x 3 kimi kimi 4096 Sep 22 17:15 .kimi-slides
+lrwxrwxrwx 1 kimi kimi   37 Sep 23 02:44 .lark-cli -> /mnt/agents/.user/auth/lark/.lark-cli
+drwxr-xr-x 4 kimi kimi 4096 Sep 22 17:15 .local
+drwxr-xr-x 3 kimi kimi 4096 Sep 22 17:13 .npm
+drwxr-xr-x 4 kimi kimi 4096 Sep 22 17:15 .npm-cache
+drwxr-xr-x 3 kimi kimi 4096 Sep 22 17:15 .npm-global
+-rw------- 1 kimi kimi   58 Sep 14 17:50 .npmrc
+drwxr-xr-x 4 kimi kimi 4096 Sep 22 17:15 .nuget
+-rw-r--r-- 1 kimi kimi  807 Jun  6  2025 .profile
+drwx------ 2 kimi kimi 4096 Sep 22 17:13 .ssh

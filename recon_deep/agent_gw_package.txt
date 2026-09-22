@@ -1,0 +1,10 @@
+Name: agent-gw
+Version: 0.3.0
+Summary: Kimi agent-gw（Kimi For Coding Backend）的 Python SDK —— 覆盖 tools/chat/messages/embeddings/search/fetch 等接口。
+Home-page: https://github.com/MoonshotAI
+Author: Moonshot AI
+Author-email: 
+License: Proprietary
+Location: /usr/local/lib/python3.12/site-packages
+Requires: requests
+Required-by: 

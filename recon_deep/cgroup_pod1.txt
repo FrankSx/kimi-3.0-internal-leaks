@@ -1,0 +1,14 @@
+13:perf_event:/kubepods/burstable/pod0eb323b8-34c4-44ec-ab8e-b8118416e7a2/903cdcb7a23a43fe669932c8318e11fb179dbd7dd4a6b0971853c44c2cac8980
+12:devices:/kubepods/burstable/pod0eb323b8-34c4-44ec-ab8e-b8118416e7a2/903cdcb7a23a43fe669932c8318e11fb179dbd7dd4a6b0971853c44c2cac8980
+11:rdma:/kubepods/burstable/pod0eb323b8-34c4-44ec-ab8e-b8118416e7a2/903cdcb7a23a43fe669932c8318e11fb179dbd7dd4a6b0971853c44c2cac8980
+10:pids:/kubepods/burstable/pod0eb323b8-34c4-44ec-ab8e-b8118416e7a2/903cdcb7a23a43fe669932c8318e11fb179dbd7dd4a6b0971853c44c2cac8980
+9:cpu,cpuacct:/kubepods/burstable/pod0eb323b8-34c4-44ec-ab8e-b8118416e7a2/903cdcb7a23a43fe669932c8318e11fb179dbd7dd4a6b0971853c44c2cac8980
+8:ioasids:/
+7:cpuset:/kubepods/burstable/pod0eb323b8-34c4-44ec-ab8e-b8118416e7a2/903cdcb7a23a43fe669932c8318e11fb179dbd7dd4a6b0971853c44c2cac8980
+6:hugetlb:/kubepods/burstable/pod0eb323b8-34c4-44ec-ab8e-b8118416e7a2/903cdcb7a23a43fe669932c8318e11fb179dbd7dd4a6b0971853c44c2cac8980
+5:memory:/kubepods/burstable/pod0eb323b8-34c4-44ec-ab8e-b8118416e7a2/903cdcb7a23a43fe669932c8318e11fb179dbd7dd4a6b0971853c44c2cac8980
+4:net_cls,net_prio:/kubepods/burstable/pod0eb323b8-34c4-44ec-ab8e-b8118416e7a2/903cdcb7a23a43fe669932c8318e11fb179dbd7dd4a6b0971853c44c2cac8980
+3:blkio:/kubepods/burstable/pod0eb323b8-34c4-44ec-ab8e-b8118416e7a2/903cdcb7a23a43fe669932c8318e11fb179dbd7dd4a6b0971853c44c2cac8980
+2:freezer:/kubepods/burstable/pod0eb323b8-34c4-44ec-ab8e-b8118416e7a2/903cdcb7a23a43fe669932c8318e11fb179dbd7dd4a6b0971853c44c2cac8980
+1:name=systemd:/kubepods/burstable/pod0eb323b8-34c4-44ec-ab8e-b8118416e7a2/903cdcb7a23a43fe669932c8318e11fb179dbd7dd4a6b0971853c44c2cac8980
+0::/
