@@ -1,0 +1,98 @@
+--- /tmp/kimi_arch/Kimi-2.5-internal-leaks/pdf/scripts/pdf.py	2026-09-22 17:56:00.440499457 +0800
++++ /app/.agents/skills/pdf/scripts/pdf.py	2026-09-20 19:47:04.000000000 +0800
+@@ -14,7 +14,8 @@
+   pdf.py pages crop <pdf> <box> -o <out>      Crop pages
+   pdf.py meta get <pdf>                       Read metadata
+   pdf.py meta set <pdf> -o <out> -d <json>    Set metadata
+-  pdf.py convert <file> -o <out>              Convert to PDF
++  pdf.py convert <file> -o <out>              Convert Office/other files to PDF (LibreOffice)
++  pdf.py doctor [--json]                      Check route dependency availability
+ """
+ 
+ import argparse
+@@ -22,6 +23,12 @@
+ import sys
+ from pathlib import Path
+ 
++# UTF-8 stdio guard — win32 pipes default to the ANSI codepage (cp1252/cp936)
++# and CJK titles / file paths in JSON output would crash the print.
++if hasattr(sys.stdout, "reconfigure"):
++    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
++    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
++
+ # Add script directory to path for relative imports
+ sys.path.insert(0, str(Path(__file__).parent))
+ 
+@@ -72,7 +79,7 @@
+             Output.error("InvalidJSON", f"JSON parse error: {e}")
+     elif args.file:
+         try:
+-            with open(args.file) as f:
++            with open(args.file, encoding="utf-8") as f:
+                 data = json.load(f)
+         except Exception as e:
+             Output.error("FileError", f"Failed to read file: {e}")
+@@ -150,11 +157,22 @@
+ 
+ # ============ convert command ============
+ def cmd_convert(args):
+-    """Convert to PDF"""
++    """Convert Office/other files to PDF via LibreOffice"""
+     from cmd_convert import convert_to_pdf
+     convert_to_pdf(args.file, args.output)
+ 
+ 
++# ============ doctor command ============
++def cmd_doctor(args):
++    """Report route dependency availability (preflight for route selection)"""
++    from cmd_doctor import collect_report, render_text
++
++    report = collect_report()
++    if args.json:
++        Output.success(report)
++    print(render_text(report))
++
++
+ # ============ main entry ============
+ def main():
+     parser = argparse.ArgumentParser(
+@@ -194,7 +212,7 @@
+ 
+     extract_image_p = extract_sub.add_parser("image", help="Extract images")
+     extract_image_p.add_argument("pdf", help="PDF file")
+-    extract_image_p.add_argument("-o", "--output", default=".", help="Output directory")
++    extract_image_p.add_argument("-o", "--output", required=True, help="Output directory")
+     extract_image_p.set_defaults(func=cmd_extract_image)
+ 
+     # --- pages ---
+@@ -208,7 +226,7 @@
+ 
+     pages_split_p = pages_sub.add_parser("split", help="Split PDF")
+     pages_split_p.add_argument("pdf", help="PDF file")
+-    pages_split_p.add_argument("-o", "--output", default=".", help="Output directory")
++    pages_split_p.add_argument("-o", "--output", required=True, help="Output directory")
+     pages_split_p.set_defaults(func=cmd_pages_split)
+ 
+     pages_rotate_p = pages_sub.add_parser("rotate", help="Rotate pages")
+@@ -240,11 +258,19 @@
+     meta_set_p.set_defaults(func=cmd_meta_set)
+ 
+     # --- convert ---
+-    convert_parser = subparsers.add_parser("convert", help="Convert to PDF")
++    convert_parser = subparsers.add_parser("convert", help="Convert Office/other files to PDF")
+     convert_parser.add_argument("file", help="Input file (docx/pptx/xlsx, etc.)")
+-    convert_parser.add_argument("-o", "--output", help="Output PDF (default: same name)")
++    convert_parser.add_argument("-o", "--output", required=True, help="Output PDF path")
+     convert_parser.set_defaults(func=cmd_convert)
+ 
++    # --- doctor ---
++    doctor_p = subparsers.add_parser(
++        "doctor",
++        help="Check route dependency availability (preflight before choosing a creation route)",
++    )
++    doctor_p.add_argument("--json", action="store_true", help="Machine-readable JSON output")
++    doctor_p.set_defaults(func=cmd_doctor)
++
+     # Parse and execute
+     args = parser.parse_args()
+ 

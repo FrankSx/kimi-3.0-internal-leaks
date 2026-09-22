@@ -1,0 +1,72 @@
+--- /tmp/kimi_arch/Kimi-2.5-internal-leaks/pdf/routes/html.md	2026-09-22 17:56:00.436499286 +0800
++++ /app/.agents/skills/pdf/routes/html.md	2026-09-20 19:47:04.000000000 +0800
+@@ -4,18 +4,40 @@
+ 
+ ---
+ 
+-## Step 0: Check & Install Dependencies (Do First)
+-**Run immediately before writing HTML**—package download takes time.
++## Step 0: Requirements
++Run `python3 ./scripts/pdf.py doctor` first and continue only when it
++reports the HTML route READY. If doctor reports it MISSING, fall back to
++`routes/reportlab.md` right away — do not run `html_to_pdf.js` blind just
++to probe the environment.
++
++Browser resolution chain (doctor and `html_to_pdf.js` share it via
++`scripts/browser_helper.js`; doctor's `browser` field reports the outcome as
++`bundled` / `system` / `none`):
++
++1. **bundled** — Playwright-managed Chromium: the default download path
++   first, then `PLAYWRIGHT_CHROMIUM_PATH` / `CHROMIUM_PATH` / `BROWSER_PATH`
++   and the `ms-playwright` caches.
++2. **system** — well-known system browsers: macOS `/Applications`
++   (Chrome / Chromium / Edge / Brave), Linux (`google-chrome`,
++   `google-chrome-stable`, `chromium`, `chromium-browser`, …), Windows
++   Program Files (Chrome / Edge / Chromium). A hit is launched via
++   `executablePath`; its version may not match Playwright exactly (the
++   script prints a notice).
++3. **none** — no browser anywhere above: the HTML route is unavailable. Go
++   straight to `routes/reportlab.md`; do not probe by running
++   `html_to_pdf.js` and do not install the browser stack on the spot.
++
++Requires Node.js, Playwright, and Chromium already present in the environment.
++The conversion script resolves the browser across macOS/Linux/Windows
++automatically. Both missing-dependency cases fail with **exit code 2** and a
++guidance message on stderr — never a stack trace — and never auto-install
++anything:
+ 
+-```bash
+-/app/.kimi/skills/pdf/scripts/setup.sh
+-```
++- **Playwright package not resolvable** → "Playwright module not found" (exit 2)
++- **Chromium binary not found** (Playwright present, no fallback browser) → "Chromium browser not found" (exit 2)
+ 
+-The script only checks status, does not auto-install. If missing, install manually:
+-- Node.js: `brew install node` (macOS) / `apt install nodejs` (Ubuntu)
+-- Playwright: `npm install -g playwright && npx playwright install chromium`
+-
+-Run in background while writing HTML.
++On exit 2, fall back to `routes/reportlab.md` — do not install the browser
++stack unless the user explicitly wants this route.
+ 
+ ## Step 1: Write HTML
+ 1. **Do NOT load Paged.js**: The conversion script injects it automatically; duplicate loading causes page count doubling and layout corruption.
+@@ -27,8 +49,7 @@
+ 
+ ## Step 2: Convert to PDF
+ ```bash
+-node /app/.kimi/skills/pdf/scripts/html_to_pdf.js document.html
+-node /app/.kimi/skills/pdf/scripts/html_to_pdf.js document.html --output output.pdf
++node ./scripts/html_to_pdf.js document.html --output output.pdf
+ ```
+ After conversion, the script outputs:
+ - Page count, word statistics, figures/tables count
+@@ -485,6 +506,8 @@
+ ### Reference Standards
+ **All citations must be real, no mocking**—must verify via search, fabricating any author, title, year, or page number is prohibited.
+ 
++For Markdown-first research reports, source markers such as `[^123^]` map by exact numeric `id` to the citation JSONL supplied with the Markdown, or to `/mnt/agents/.store/citation.jsonl` when no file is supplied. Treat the Markdown as canonical content and the HTML as a presentation-only projection. Use the matched metadata to build whatever citation treatment fits the PDF. References are optional rather than mandatory for this handoff. If an ID cannot be resolved, preserve the marker and report it instead of inventing or dropping a source.
++
+ #### Strict Correspondence Constraint
+ In-text `<a href="#ref-1">[1]</a>` must strictly correspond to end-of-document `<li id="ref-1">`:
+ - `id` must be unique and matching
