@@ -1,0 +1,89 @@
+total 58276
+drwxr-xr-x 1 root root     4096 Sep 22 17:14 .
+drwxr-xr-x 1 root root     4096 Sep 22 17:14 ..
+lrwxrwxrwx 1 root root        9 Oct 10  2025 2to3 -> 2to3-3.12
+-rwxr-xr-x 1 root root      102 Oct 10  2025 2to3-3.12
+drwxr-xr-x 1 root root     4096 Sep 22 17:13 __pycache__
+-rw-r--r-- 1 root root     1132 Sep 14 17:50 bt-run.py
+-rwxr-xr-x 1 root root      226 Sep 14 17:50 btrun
+-rwxr-xr-x 1 root root      224 Sep 14 17:50 cffi-gen-src
+-rwxr-xr-x 1 root root      221 Sep 14 17:50 curl-cffi
+-rwxr-xr-x 1 root root      226 Aug 12 19:49 debugpy
+-rwxr-xr-x 1 root root      232 Aug 12 19:49 debugpy-adapter
+-rwxr-xr-x 1 root root      221 Aug 12 19:49 dotenv
+-rwxr-xr-x 1 root root    14588 Sep 14 17:50 dumppdf.py
+lrwxrwxrwx 1 root root       37 Sep 14 17:49 dws -> /home/kimi/.cli-tools/dws-cli/bin/dws
+-rwxr-xr-x 1 root root      219 Aug 12 19:52 easyocr
+-rwxr-xr-x 1 root root      232 Aug 12 19:49 email_validator
+-rwxr-xr-x 1 root root      225 Aug 12 19:49 f2py
+-rwxr-xr-x 1 root root      223 Aug 12 19:49 fastapi
+-rwxr-xr-x 1 root root      226 Aug 12 19:49 fonttools
+-rwxr-xr-x 1 root root      213 Aug 12 19:49 httpx
+lrwxrwxrwx 1 root root        5 Oct 10  2025 idle -> idle3
+lrwxrwxrwx 1 root root        8 Oct 10  2025 idle3 -> idle3.12
+-rwxr-xr-x 1 root root      100 Oct 10  2025 idle3.12
+-rwxr-xr-x 1 root root      250 Aug 12 19:51 imageio_download_bin
+-rwxr-xr-x 1 root root      246 Aug 12 19:51 imageio_remove_bin
+-rwxr-xr-x 1 root root      233 Aug 12 19:49 ipython
+-rwxr-xr-x 1 root root      233 Aug 12 19:49 ipython3
+-rwxr-xr-x 1 root root      214 Aug 12 19:51 isympy
+-rwxr-xr-x 1 root root      222 Aug 12 19:52 jsonschema
+-rwxr-xr-x 1 root root      228 Aug 12 19:49 jupyter
+-rwxr-xr-x 1 root root      232 Aug 12 19:49 jupyter-kernel
+-rwxr-xr-x 1 root root      270 Aug 12 19:49 jupyter-kernelspec
+-rwxr-xr-x 1 root root      228 Aug 12 19:49 jupyter-migrate
+-rwxr-xr-x 1 root root      249 Aug 12 19:49 jupyter-run
+-rwxr-xr-x 1 root root      233 Aug 12 19:49 jupyter-troubleshoot
+lrwxrwxrwx 1 root root       43 Sep 14 17:49 lark-cli -> /home/kimi/.cli-tools/lark-cli/bin/lark-cli
+-rwxr-xr-x 1 root root      224 Aug 12 19:50 lsm2bin
+-rwxr-xr-x 1 root root 32548800 Sep 14 17:50 magika
+-rwxr-xr-x 1 root root      229 Aug 12 19:49 markdown-it
+-rwxr-xr-x 1 root root      224 Sep 14 17:50 markdownify
+-rwxr-xr-x 1 root root      227 Sep 14 17:50 markitdown
+-rwxr-xr-x 1 root root   372384 Aug 12 19:51 ninja
+-rwxr-xr-x 1 root root      235 Aug 12 19:49 normalizer
+-rwxr-xr-x 1 root root      225 Aug 12 19:49 numpy-config
+-rwxr-xr-x 1 root root      242 Sep 14 17:50 onnxruntime_test
+-rwxr-xr-x 1 root root    10046 Sep 14 17:50 pdf2txt.py
+-rwxr-xr-x 1 root root      222 Sep 14 17:50 pdfplumber
+lrwxrwxrwx 1 root root        4 Oct 10  2025 pip -> pip3
+-rwxr-xr-x 1 root root      230 Oct 10  2025 pip3
+-rwxr-xr-x 1 root root      230 Oct 10  2025 pip3.12
+-rwxr-xr-x 1 root root      227 Aug 12 19:48 playwright
+-rwxr-xr-x 1 root root      252 Aug 12 19:51 plotly_get_chrome
+-rwxr-xr-x 1 root root      230 Aug 12 19:51 proton
+-rwxr-xr-x 1 root root      230 Aug 12 19:51 proton-viewer
+-rwxr-xr-x 1 root root      212 Sep 14 17:50 pwiz
+-rwxr-xr-x 1 root root      228 Sep 14 17:50 pwmigrate
+-rwxr-xr-x 1 root root      212 Aug 12 19:50 pybidi
+lrwxrwxrwx 1 root root        6 Oct 10  2025 pydoc -> pydoc3
+lrwxrwxrwx 1 root root        9 Oct 10  2025 pydoc3 -> pydoc3.12
+-rwxr-xr-x 1 root root       85 Oct 10  2025 pydoc3.12
+-rwxr-xr-x 1 root root      223 Aug 12 19:49 pyftmerge
+-rwxr-xr-x 1 root root      224 Aug 12 19:49 pyftsubset
+-rwxr-xr-x 1 root root      224 Aug 12 19:49 pygmentize
+-rwxr-xr-x 1 root root      224 Sep 14 17:50 pymupdf
+-rwxr-xr-x 1 root root      238 Sep 14 17:50 pypdfium2
+-rwxr-xr-x 1 root root      223 Aug 12 19:51 pyproj
+-rwxr-xr-x 1 root root      231 Aug 12 19:51 pytesseract
+lrwxrwxrwx 1 root root        7 Oct 10  2025 python -> python3
+lrwxrwxrwx 1 root root       14 Oct 10  2025 python-config -> python3-config
+lrwxrwxrwx 1 root root       10 Oct 10  2025 python3 -> python3.12
+lrwxrwxrwx 1 root root       17 Oct 10  2025 python3-config -> python3.12-config
+-rwxr-xr-x 1 root root    18304 Oct 10  2025 python3.12
+-rwxr-xr-x 1 root root     3018 Oct 10  2025 python3.12-config
+-rwxr-xr-x 1 root root    16079 Aug 12 19:50 runxlrd.py
+-rwxr-xr-x 1 root root      225 Aug 12 19:51 striprtf
+-rwxr-xr-x 1 root root      218 Aug 12 19:50 tabulate
+-rwxr-xr-x 1 kimi kimi 26401536 Aug  1 03:58 tectonic
+-rwxr-xr-x 1 root root      228 Aug 12 19:50 tiff2fsspec
+-rwxr-xr-x 1 root root      228 Aug 12 19:50 tiffcomment
+-rwxr-xr-x 1 root root      216 Aug 12 19:50 tifffile
+-rwxr-xr-x 1 root root      238 Aug 12 19:52 torchfrtrace
+-rwxr-xr-x 1 root root      229 Aug 12 19:52 torchrun
+-rwxr-xr-x 1 root root      221 Aug 12 19:49 ttx
+-rwxr-xr-x 1 root root      217 Aug 12 19:49 typer
+-rwxr-xr-x 1 root root      220 Aug 12 19:49 uvicorn
+-rwxr-xr-x 1 root root     2328 Aug 12 19:50 vba_extract.py
+-rwxr-xr-x 1 root root      220 Aug 12 19:49 watchfiles
+-rwxr-xr-x 1 root root      222 Aug 12 19:49 websockets
