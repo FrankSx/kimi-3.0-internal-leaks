@@ -1,0 +1,112 @@
+--- /tmp/kimi_arch/Kimi-2.5-internal-leaks/pdf/SKILL.md	2026-09-22 17:56:00.436499286 +0800
++++ /app/.agents/skills/pdf/SKILL.md	2026-09-20 19:47:04.000000000 +0800
+@@ -7,11 +7,35 @@
+ 
+ | Route | Trigger | Route File |
+ |-------|---------|------------|
+-| **HTML** (default) | All PDF creation requests | `routes/html.md` |
++| **HTML** (preferred for creation) | PDF creation when Node.js + Playwright + a browser are available (Playwright's Chromium, else an installed system Chrome/Edge/Chromium is reused) | `routes/html.md` |
++| **ReportLab** (fallback) | PDF creation without a browser stack; simple or one-off PDFs | `routes/reportlab.md` |
+ | **LaTeX** | User explicitly requests LaTeX, .tex, or Tectonic | `routes/latex.md` |
+ | **Process** | Work with existing PDFs (extract, merge, fill forms, etc.) | `routes/process.md` |
+ 
+-**Default to HTML.** Only use LaTeX route when user explicitly requests it.
++**Creation route choice (preflight required):** before picking a creation
++route, always run the dependency preflight and choose by its output:
++
++```bash
++python3 ./scripts/pdf.py doctor
++```
++
++Use the **HTML** route (Playwright + Paged.js) only when doctor reports the
++HTML route READY (Node.js + Playwright + browser all present — when the
++Playwright-managed browser is not downloaded, an installed system
++Chrome/Edge/Chromium is reused instead) — it gives the highest-fidelity
++layout. If doctor reports it MISSING, use **ReportLab**
++directly; do not install the browser stack just for one PDF, and do not probe
++the environment by running `html_to_pdf.js` blind — a missing stack only
++burns a failed call before the fallback. Use **LaTeX** only when the user
++explicitly asks for it.
++
++### Markdown-first report handoff
++
++When Deep Research or another upstream workflow supplies a complete Markdown report, treat that Markdown as the canonical content source and convert it through the HTML route instead of restarting research or rewriting the report. HTML is a presentation-only projection: preserve the report's sections, tables, figures, claims, and source IDs.
++
++Research citations use markers such as `[^123^]`. If a citation JSONL is supplied with the Markdown, use that exact file; otherwise use `/mnt/agents/.store/citation.jsonl`. Each JSON object is keyed by `id`. Match each numeric marker to the same source ID and render citations in the form best suited to the document (for example inline links, superscript citations, footnotes, endnotes, or a References section). The PDF route does not mandate one citation presentation. Citation definition lines in the supplied Markdown are also canonical input: a mapped definition may be replaced by its complete rendered citation, but an unresolved definition and its text must remain visible. Preserve unresolved markers and warn about missing IDs; never fabricate or silently delete a source.
++
++Run route commands from the PDF Skill directory or resolve their paths from that directory. Treat all conversion warnings and errors as actionable feedback: retain their full context, work on a copy, and retry until the requested PDF passes the route checks. Never suppress a failure or present a failed artifact as final.
+ 
+ ### MANDATORY: Read Route File Before Implementation
+ 
+@@ -22,8 +46,8 @@
+ </system-reminder>
+ 
+ **Before implementation, you MUST:**
+-1. Determine the route (HTML / LaTeX / Process)
+-2. **Read the route file** (`routes/html.md`, `routes/latex.md`, or `routes/process.md`)
++1. Determine the route (HTML / ReportLab / LaTeX / Process)
++2. **Read the route file** (`routes/html.md`, `routes/reportlab.md`, `routes/latex.md`, or `routes/process.md`)
+ 3. Only then proceed with implementation
+ 
+ This file (SKILL.md) contains constraints and principles. Route files contain **how-to details**.
+@@ -33,7 +57,8 @@
+ #### Route Selection
+ | User Says | Route |
+ |-----------|-------|
+-| "Create a PDF", "Make a report", "Write a paper" | HTML |
++| "Create a PDF", "Make a report", "Write a paper" | Run `pdf.py doctor` first: HTML if it reports the HTML route READY, else ReportLab |
++| "Convert this Markdown file to PDF" | Run `pdf.py doctor` first: HTML if READY, else ReportLab |
+ | "Use LaTeX", "Compile .tex", "Use Tectonic" | LaTeX |
+ | "Extract text from PDF", "Merge these PDFs", "Fill this form" | Process |
+ 
+@@ -46,7 +71,7 @@
+ 
+ **Key principle**: Cover background separates "acceptable" from "impressive". See html.md for 11 style options.
+ 
+-#### Citation Format Selection
++#### Citation Format Selection (when a References section is used)
+ | Document Language | Format |
+ |-------------------|--------|
+ | Chinese | GB/T 7714 (use [J][M][D] identifiers) |
+@@ -61,16 +86,19 @@
+ 
+ ```bash
+ # Check environment (JSON output, exit code 0=ok, 2=missing deps)
+-/app/.kimi/skills/pdf/scripts/pdf.sh check
++./scripts/pdf.sh check
++
++# Preflight before choosing a creation route (mandatory, see Route Selection)
++python3 ./scripts/pdf.py doctor
+ 
+ # Auto-fix missing dependencies (idempotent, safe to run multiple times)
+-/app/.kimi/skills/pdf/scripts/pdf.sh fix
++./scripts/pdf.sh fix
+ 
+ # Convert HTML to PDF
+-/app/.kimi/skills/pdf/scripts/pdf.sh html input.html
++./scripts/pdf.sh html input.html --output output.pdf
+ 
+ # Compile LaTeX to PDF
+-/app/.kimi/skills/pdf/scripts/pdf.sh latex input.tex
++./scripts/pdf.sh latex input.tex --output output.pdf
+ ```
+ 
+ **Exit codes:**
+@@ -80,7 +108,8 @@
+ - `3` = runtime error
+ 
+ **Dependencies by route:**
+-- **HTML route**: Node.js, Playwright, Chromium
++- **HTML route**: Node.js, Playwright, and a browser — Playwright's Chromium; when it is not downloaded, an installed system Chrome/Edge/Chromium is reused automatically. Use only when already present; do not install on the spot.
++- **ReportLab route**: Python 3, reportlab + matplotlib — missing → install per `routes/reportlab.md` Step 0 (`python3 -m pip install --user reportlab matplotlib`, Tsinghua mirror first, official index once on failure, then stop and report); add `pillow` when embedding images
+ - **Process route**: Python 3, pikepdf, pdfplumber
+ - **LaTeX route**: Tectonic
+ 
+@@ -193,6 +222,7 @@
+ |-------|-------|---------|
+ | HTML | Playwright + Paged.js | HTML → PDF conversion |
+ | HTML | KaTeX, Mermaid | Math formulas, diagrams |
++| ReportLab | reportlab, matplotlib | Pure-Python PDF creation (fallback route, no browser stack) |
+ | Process | pikepdf | Form filling, page operations, metadata |
+ | Process | pdfplumber | Text and table extraction |
+ | Process | LibreOffice | Office → PDF conversion |
