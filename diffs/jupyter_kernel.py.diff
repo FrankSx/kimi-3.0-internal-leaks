@@ -1,0 +1,416 @@
+--- /tmp/kimi_arch/kimi-2.0-internal-leaks/jupyter_kernel.py	2026-09-22 17:59:19.422968233 +0800
++++ /app/jupyter_kernel.py	2026-08-12 19:43:25.000000000 +0800
+@@ -1,6 +1,8 @@
+ import json
+ import os
+ from datetime import datetime
++from pathlib import Path
++from queue import Empty
+ from typing import List, Optional, Dict, Any
+ from pydantic import BaseModel
+ import time
+@@ -10,6 +12,8 @@
+ 
+ from jupyter_client.manager import KernelManager
+ 
++IPYTHON_INIT_SCRIPT_PATH = Path(__file__).with_name("ipython.py.init")
++
+ 
+ class ExecutionResult(BaseModel):
+     success: bool
+@@ -32,6 +36,7 @@
+         self.km = None
+         self.kc = None
+         self.connection_file = None
++        self._init_script_pending = True
+         self._start_kernel()
+ 
+     def _start_kernel(self):
+@@ -59,60 +64,27 @@
+                         raise
+                     continue
+ 
+-            # 初始化必要的包和配置
+-            init_code = """
+-import matplotlib
+-import matplotlib.pyplot as plt
+-import matplotlib.font_manager as fm
+-import numpy as np
+-from IPython.display import display
+-%matplotlib inline
+-
+-# 设置 matplotlib 中文字体支持
+-plt.style.use('default')
+-plt.rcParams['figure.figsize'] = [8, 6]
+-plt.rcParams['figure.dpi'] = 100
+-plt.rcParams['savefig.dpi'] = 100
+-plt.rcParams['font.size'] = 10
+-plt.rcParams['axes.grid'] = True
+-plt.rcParams['figure.facecolor'] = 'white'
+-plt.rcParams['axes.facecolor'] = 'white'
+-plt.rcParams['savefig.facecolor'] = 'white'
+-plt.rcParams['savefig.edgecolor'] = 'none'
+-
+-# 配置中文字体
+-# 强制重新初始化字体管理器以识别新安装的字体
+-fm.fontManager.__init__()
+-
+-# 查找可用的 CJK 字体
+-cjk_fonts = [f.name for f in fm.fontManager.ttflist if 'CJK' in f.name]
+-if cjk_fonts:
+-    # 优先使用简体中文字体，如果没有则使用日文字体（也支持中文）
+-    preferred_fonts = ['Noto Sans CJK SC', 'Noto Sans CJK TC', 'Noto Sans CJK JP']
+-    selected_font = None
+-    for font in preferred_fonts:
+-        if font in cjk_fonts:
+-            selected_font = font
+-            break
+-
+-    if selected_font:
+-        plt.rcParams['font.family'] = selected_font
+-    else:
+-        # 使用找到的第一个 CJK 字体
+-        plt.rcParams['font.family'] = list(set(cjk_fonts))[0]
+-else:
+-    # 回退到默认配置
+-    plt.rcParams['font.family'] = 'sans-serif'
+-    plt.rcParams['font.sans-serif'] = ['Noto Sans CJK SC', 'Noto Sans CJK TC', 'DejaVu Sans']
+-
+-plt.rcParams['axes.unicode_minus'] = False
+-"""
+-            self.execute(init_code)
++            self._init_script_pending = True
++
+         except Exception as e:
+             print(f"Kernel initialization error: {str(e)}")
+             self.shutdown()
+             raise
+ 
++    def run_init_script_if_needed(self) -> Optional[ExecutionResult]:
++        if not self._init_script_pending:
++            return None
++
++        init_script = IPYTHON_INIT_SCRIPT_PATH.read_text(encoding="utf-8")
++        if not init_script.strip():
++            self._init_script_pending = False
++            return None
++
++        result = self.execute(init_script)
++        if result.success:
++            self._init_script_pending = False
++        return result
++
+     def _ensure_kernel_alive(self):
+         """确保 kernel 是活跃的，如果不是则重启"""
+         try:
+@@ -133,7 +105,7 @@
+             print(f"Kernel check failed: {str(e)}")
+             self._start_kernel()
+ 
+-    def execute(self, code: str, timeout: int = 30) -> ExecutionResult:
++    def execute(self, code: str, timeout: float = 30) -> ExecutionResult:
+         try:
+             # 确保 kernel 是活跃的
+             self._ensure_kernel_alive()
+@@ -154,10 +126,25 @@
+             while True:
+                 try:
+                     if time.time() - start_time > timeout:
++                        interrupt_result = self.interrupt_kernel()
++                        if not interrupt_result.get("success"):
++                            raise RuntimeError(
++                                f"Kernel interrupt failed: {interrupt_result.get('message', 'Unknown error')}"
++                            )
++
++                        while True:
++                            msg = self.kc.get_iopub_msg(timeout=timeout + 1)
++                            if (
++                                msg["parent_header"]["msg_id"] == msg_id
++                                and msg["header"]["msg_type"] == "status"
++                                and msg["content"]["execution_state"] == "idle"
++                            ):
++                                break
++
+                         return ExecutionResult(
+                             success=False,
+                             output="",
+-                            error=f"Executing code timed out, timeout: {timeout} seconds",
++                            error=f"Execution timed out after {timeout} seconds",
+                             images=[],
+                         )
+ 
+@@ -194,6 +181,8 @@
+                         and msg["content"]["execution_state"] == "idle"
+                     ):
+                         break
++                except Empty:
++                    continue
+                 except Exception as e:
+                     if str(e) == "Timeout waiting for message":
+                         continue
+@@ -292,117 +281,183 @@
+         """获取 kernel 连接信息"""
+         try:
+             if not self.km or not self.connection_file:
+-                return {
+-                    "success": False,
+-                    "message": "Kernel not initialized",
+-                    "kernel_alive": False,
+-                }
+-
+-            # 读取 connection file 的内容
+-            with open(self.connection_file, "r") as f:
+-                connection_info = json.load(f)
++                return {"success": False, "message": "Kernel not initialized"}
++
++            # 读取连接文件内容
++            connection_info = {}
++            if os.path.exists(self.connection_file):
++                with open(self.connection_file, "r") as f:
++                    connection_info = json.load(f)
+ 
+             return {
+                 "success": True,
+                 "connection_file": self.connection_file,
+                 "connection_info": connection_info,
+-                "kernel_alive": self.km.is_alive(),
++                "kernel_alive": self.km.is_alive() if self.km else False,
+                 "kernel_pid": self._get_kernel_pid(),
+             }
+         except Exception as e:
+             return {
+                 "success": False,
+                 "message": f"Failed to get connection info: {str(e)}",
+-                "kernel_alive": False,
+             }
+ 
++    def debug_kernel_manager(self) -> Dict[str, Any]:
++        """调试 KernelManager 的状态和属性"""
++        debug_info = {
++            "km_exists": self.km is not None,
++            "km_type": str(type(self.km)) if self.km else None,
++            "km_alive": self.km.is_alive() if self.km else False,
++            "attributes": {},
++            "methods_tried": {},
++        }
++
++        if self.km:
++            # 检查各种属性
++            for attr in ["kernel", "kernel_id", "connection_file", "provisioner"]:
++                if hasattr(self.km, attr):
++                    try:
++                        value = getattr(self.km, attr)
++                        debug_info["attributes"][attr] = {
++                            "exists": True,
++                            "value": str(value),
++                            "type": str(type(value)),
++                            "is_none": value is None,
++                        }
++
++                        # 如果是 provisioner，进一步检查
++                        if attr == "provisioner" and value:
++                            debug_info["attributes"]["provisioner"]["process"] = {
++                                "exists": hasattr(value, "process"),
++                                "value": str(getattr(value, "process", None)),
++                                "type": str(type(getattr(value, "process", None))),
++                            }
++                            if hasattr(value, "process") and value.process:
++                                debug_info["attributes"]["provisioner"]["process"][
++                                    "pid"
++                                ] = {
++                                    "exists": hasattr(value.process, "pid"),
++                                    "value": getattr(value.process, "pid", None),
++                                }
++
++                        # 如果是 kernel，进一步检查
++                        if attr == "kernel" and value:
++                            debug_info["attributes"]["kernel"]["pid"] = {
++                                "exists": hasattr(value, "pid"),
++                                "value": getattr(value, "pid", None),
++                            }
++
++                    except Exception as e:
++                        debug_info["attributes"][attr] = {
++                            "exists": True,
++                            "error": str(e),
++                        }
++                else:
++                    debug_info["attributes"][attr] = {"exists": False}
++
++        return debug_info
++
++    def _get_kernel_pid(self) -> Optional[int]:
++        """安全地获取 kernel 进程 ID"""
++        if not self.km:
++            return None
++
++        try:
++            # 方法1: 通过 provisioner (jupyter-client >= 7.0)
++            if hasattr(self.km, "provisioner"):
++                provisioner = getattr(self.km, "provisioner", None)
++                if provisioner and hasattr(provisioner, "process"):
++                    process = getattr(provisioner, "process", None)
++                    if process and hasattr(process, "pid"):
++                        return getattr(process, "pid", None)
++
++            # 方法2: 直接从 kernel 属性 (旧版本)
++            if hasattr(self.km, "kernel"):
++                kernel = getattr(self.km, "kernel", None)
++                if kernel and hasattr(kernel, "pid"):
++                    return getattr(kernel, "pid", None)
++
++            # 方法3: 通过 kernel_id 和系统进程查找
++            if hasattr(self.km, "kernel_id") and self.km.kernel_id:
++                import psutil
++
++                # 查找包含 kernel_id 的 python 进程
++                for proc in psutil.process_iter(["pid", "name", "cmdline"]):
++                    try:
++                        if proc.info["name"] and "python" in proc.info["name"].lower():
++                            cmdline = proc.info["cmdline"] or []
++                            for arg in cmdline:
++                                if self.km.kernel_id in str(arg):
++                                    return proc.info["pid"]
++                    except (psutil.NoSuchProcess, psutil.AccessDenied):
++                        continue
++
++            # 方法4: 通过连接文件查找相关进程
++            if hasattr(self.km, "connection_file") and self.km.connection_file:
++                import os
++                import psutil
++
++                connection_file = os.path.basename(self.km.connection_file)
++                kernel_name = connection_file.replace("kernel-", "").replace(
++                    ".json", ""
++                )
++
++                for proc in psutil.process_iter(["pid", "name", "cmdline"]):
++                    try:
++                        if proc.info["name"] and "python" in proc.info["name"].lower():
++                            cmdline = proc.info["cmdline"] or []
++                            for arg in cmdline:
++                                if kernel_name in str(arg) or connection_file in str(
++                                    arg
++                                ):
++                                    return proc.info["pid"]
++                    except (psutil.NoSuchProcess, psutil.AccessDenied):
++                        continue
++
++        except Exception as e:
++            print(f"Error getting kernel PID: {str(e)}")
++
++        return None
++
+     def get_kernel_status(self) -> Dict[str, Any]:
+-        """获取 kernel 状态"""
++        """获取 kernel 状态信息"""
+         try:
+-            if not self.km:
+-                return {
+-                    "success": False,
+-                    "message": "Kernel manager not initialized",
+-                    "kernel_alive": False,
+-                    "client_connected": False,
+-                }
+-
+-            kernel_alive = self.km.is_alive()
+-            kernel_pid = self._get_kernel_pid()
+-            connection_file = self.connection_file
++            status = {
++                "kernel_alive": False,
++                "kernel_pid": None,
++                "connection_file": self.connection_file,
++                "client_connected": False,
++            }
++
++            if self.km:
++                status["kernel_alive"] = self.km.is_alive()
++                status["kernel_pid"] = self._get_kernel_pid()
+ 
+-            # 检查 client 是否连接
+-            client_connected = False
+             if self.kc:
+                 try:
++                    # 尝试获取 kernel 信息来检查连接状态
+                     self.kc.kernel_info()
+-                    client_connected = True
+-                except Exception:
+-                    client_connected = False
++                    status["client_connected"] = True
++                except:
++                    status["client_connected"] = False
+ 
+-            return {
+-                "success": True,
+-                "kernel_alive": kernel_alive,
+-                "kernel_pid": kernel_pid,
+-                "connection_file": connection_file,
+-                "client_connected": client_connected,
+-            }
++            return {"success": True, **status}
+         except Exception as e:
+             return {
+                 "success": False,
+                 "message": f"Failed to get kernel status: {str(e)}",
+-                "kernel_alive": False,
+-                "client_connected": False,
+             }
+ 
+     def shutdown(self):
+-        """关闭 kernel"""
++        """安全地关闭 kernel"""
+         try:
+             if self.kc:
+                 self.kc.stop_channels()
+-                self.kc = None
+             if self.km:
+-                self.km.shutdown_kernel(now=True)
+-                self.km = None
+-            self.connection_file = None
++                self.km.shutdown_kernel()
+         except Exception as e:
+-            print(f"Shutdown error: {str(e)}")
+-
+-    def _get_kernel_pid(self) -> Optional[int]:
+-        """获取 kernel 进程 ID"""
+-        try:
+-            if not self.km:
+-                return None
+-            return self.km.provisioner.pid if hasattr(self.km, "provisioner") else None
+-        except Exception:
+-            return None
+-
+-    def debug_kernel_manager(self) -> Dict[str, Any]:
+-        """调试 kernel 管理器状态"""
+-        try:
+-            debug_info = {
+-                "has_km": self.km is not None,
+-                "has_kc": self.kc is not None,
+-                "connection_file": self.connection_file,
+-            }
+-
+-            if self.km:
+-                debug_info["kernel_alive"] = self.km.is_alive()
+-                debug_info["kernel_pid"] = self._get_kernel_pid()
+-                debug_info["has_provisioner"] = hasattr(self.km, "provisioner")
+-                debug_info["km_attrs"] = [
+-                    attr for attr in dir(self.km) if not attr.startswith("_")
+-                ]
+-
+-            if self.kc:
+-                debug_info["kc_attrs"] = [
+-                    attr for attr in dir(self.kc) if not attr.startswith("_")
+-                ]
+-
+-            return debug_info
+-        except Exception as e:
+-            return {"error": str(e)}
+-
+-    def restart_kernel(self) -> Dict[str, Any]:
+-        """重启 kernel（保留用于向后兼容）"""
+-        return self.reset_kernel()
++            print(f"Error during kernel shutdown: {str(e)}")
++        finally:
++            self.kc = None
++            self.km = None
++            self.connection_file = None
