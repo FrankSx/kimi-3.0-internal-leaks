@@ -1,0 +1,17 @@
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 127.0.0.1:9222          0.0.0.0:*               LISTEN      189/chromium        
+tcp        0      0 0.0.0.0:9223            0.0.0.0:*               LISTEN      -                   
+tcp        0      0 10.183.47.57:58601      0.0.0.0:*               LISTEN      138/python3         
+tcp        0      0 127.0.0.1:10250         0.0.0.0:*               LISTEN      -                   
+tcp        0      0 10.183.47.57:10250      0.0.0.0:*               LISTEN      -                   
+tcp        0      0 10.183.47.57:52209      0.0.0.0:*               LISTEN      138/python3         
+tcp        0      0 10.183.47.57:45041      0.0.0.0:*               LISTEN      138/python3         
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:38807         0.0.0.0:*               LISTEN      138/python3         
+tcp        0      0 0.0.0.0:8888            0.0.0.0:*               LISTEN      60/python3          
+tcp        0      0 10.183.47.57:59865      0.0.0.0:*               LISTEN      138/python3         
+tcp        0      0 10.183.47.57:33533      0.0.0.0:*               LISTEN      138/python3         
+tcp        0      0 0.0.0.0:6080            0.0.0.0:*               LISTEN      -                   
+tcp6       0      0 :::8080                 :::*                    LISTEN      -                   
+tcp6       0      0 :::22                   :::*                    LISTEN      -                   

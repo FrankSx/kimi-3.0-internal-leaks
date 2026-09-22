@@ -1,0 +1,1 @@
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJXVeH2Ui/WXuIFhMABcDiN7C/6r89kCp9vihbez/tVO moonshot@space.local

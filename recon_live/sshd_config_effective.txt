@@ -1,0 +1,13 @@
+Include /etc/ssh/sshd_config.d/*.conf
+PermitRootLogin no
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+UsePAM yes
+X11Forwarding yes
+PrintMotd no
+AcceptEnv LANG LC_*
+Subsystem	sftp	/usr/lib/openssh/sftp-server
+AllowUsers kimi
+SetEnv NPM_CONFIG_REGISTRY=https://npm.mirrors.msh.team/ NODE_PATH=/home/kimi/.npm-global/lib/node_modules PATH=/app/.ppt:/app/.agents/skills/backend-building/scripts/template/node_modules/.bin:/app/.agents/skills/webapp-building/scripts/template/node_modules/.bin:/app/.agents/skills/webapp-building-swarm/scripts/template/node_modules/.bin:/app/.agents/skills/backend-building-swarm/scripts/template/node_modules/.bin:/home/kimi/.local/bin:/home/kimi/.npm-global/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin

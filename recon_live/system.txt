@@ -1,0 +1,11 @@
+Linux k2102332857861140480 5.10.134-18.0.12.lifsea8.x86_64 #1 SMP Tue Aug 4 16:35:16 CST 2026 x86_64 GNU/Linux
+uid=999(kimi) gid=995(kimi) groups=995(kimi)
+PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
+NAME="Debian GNU/Linux"
+VERSION_ID="12"
+VERSION="12 (bookworm)"
+VERSION_CODENAME=bookworm
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"

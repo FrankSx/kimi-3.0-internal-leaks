@@ -1,0 +1,16 @@
+audio_generation
+email
+github
+gmail
+igo_open_data
+image_generation
+imf
+kimi-excel
+kimi-pdf
+kimi-word
+musepool
+scholar
+sec_edgar
+video_generation
+world_bank_open_data
+yahoo_finance
