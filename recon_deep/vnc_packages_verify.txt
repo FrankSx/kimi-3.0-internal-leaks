@@ -1,5 +1,0 @@
-ii  kasmvncserver                         1.3.4-1                             amd64        KasmVNC provides remote web-based access to a Desktop or application.
-ii  libvncclient1:amd64                   0.9.14+dfsg-1+deb12u2               amd64        API to write one's own VNC server - client library
-ii  libvncserver1:amd64                   0.9.14+dfsg-1+deb12u2               amd64        API to write one's own VNC server
-ii  tigervnc-tools                        1.12.0+dfsg-8                       amd64        Virtual network computing; Tools for both clients and servers
-ii  x11vnc                                0.9.16-9                            amd64        VNC server to allow remote access to an existing X session
