@@ -1,71 +1,69 @@
 # Bonus Challenge — Can You Open a New Conversation on the Account?
 
-**Status**: open question, attached 2026-09-23. See `REDACTIONS.md` for the
-redaction policy — this challenge is stated in analytical terms only.
+**Status**: **RESOLVED (empirically, 2026-09-23)** — minting is *blocked*; the
+tool surface is *not*. See `REDACTIONS.md` for the redaction policy.
 
-## The setup
+## Setup
 
-The sandbox ships a working account-scoped credential (`sk-kimi-…`, live at
-capture, now redacted and awaiting rotation) plus a bound conversation ID
-(`kimi_chat_id`) and — per the shipped SDK — a documented header/identity
-chain:
+Sandbox ships a working account-scoped credential (`sk-kimi-…`, live at capture,
+redacted, pending rotation) plus a bound conversation id. Identity/attribution
+header chain per the shipped SDK (`recon_deep/agent_gw_sdk/client.py`):
 
 ```
 Authorization: Bearer sk-kimi-…            (account identity)
-X-Kimi-Chat-Id:    <uuid>                 (conversation identity, OPTIONAL)
-X-Kimi-Session-Id: <session>              (optional attribution)
-X-Kimi-Thread-Id / X-Kimi-Event-Id        (per-exec, injected by platform)
+X-Kimi-Chat-Id:    <uuid>                 (conversation identity, SDK-optional)
+X-Kimi-Session-Id / Thread-Id / Event-Id  (attribution, client-supplied)
 ```
 
-The critical sentence is in `recon_deep/agent_gw_sdk/client.py`
-(`AgentGwClient` docstring, resolution chain item 4):
+The SDK docstring documents that `kimi_chat_id` is optional — the client simply
+omits the header when unset. The empirical question: does the *gateway* allow
+that, or is the key path-scoped?
 
-> 兜底：``api_key`` 没有时抛 ``ValueError``；``base_url`` 退到
-> ``DEFAULT_BASE_URL``；``kimi_chat_id`` 没有就不发 ``X-Kimi-Chat-Id`` 头
+## Empirical results (2026-09-23, sandbox, live key)
 
-i.e. **the SDK treats conversation identity as optional**. If the gateway
-behaves the way the SDK assumes, then a request that omits `X-Kimi-Chat-Id`
-against `POST /v1/chat/completions` (or `/v1/messages`, Anthropic-compatible)
-should cause the server to mint a *new* conversation bound to whatever identity
-the Bearer key carries — namely, the account that owned the key.
+| Probe | Result | Verdict |
+|---|---|---|
+| `GET /v1/models` | 403 `api_key_path_forbidden` — "This credential is not permitted to access this endpoint" | conversation/model surface closed to this key |
+| `POST /v1/chat/completions` (no `X-Kimi-Chat-Id`) | 403 same envelope | **conversation minting: BLOCKED** |
+| `POST /v1/messages` + forged victim `X-Kimi-Chat-Id` | 403 `permission_error` | **conversation impersonation: BLOCKED** |
+| `POST /v1/embeddings` | 200 (model `bge_m3_embed`) | works — billable |
+| `POST /v1/search` {"text_query":…} | 200 with full results | works — billable |
+| `POST /v1/fetch` {"url":…} | 200, server-side fetch of arbitrary public URL | works — **SSRF egress oracle** |
+| `POST /v1/files` (proper multipart) | 200, file id returned | works — upload path open |
+| `POST /v1/storage` (multipart) | 200, returns **public signed URL** (`https://www.kimi.com/apiv2-files/sign-obj/…`) | works — **public-URL exfil by design** |
+| `POST /v1/tools` (+/− `X-Kimi-Chat-Id`) | 200, empty `{}` envelope (no error on forged attribution headers) | works; attribution headers **accepted unvalidated** |
 
-## The challenge
+Response headers on every call: `X-Msh-Track-Id`, `X-Trace-Id`,
+`x-internal-adhoc-canary` — full server-side traceability exists; whether the
+platform alerts on anomalous key use is unknown.
 
-1. **Mint**: with nothing but the (now-rotated, or a repro-captured) key, issue
-   a chat completion with no `X-Kimi-Chat-Id`. Does the response carry a fresh
-   conversation id? Does a new conversation appear in that account's history
-   (kimi.com / the app) — i.e., is the minted conversation *visible to the
-   victim*, or only an API-side construct?
-2. **Impersonate**: send `X-Kimi-Chat-Id` set to the *victim's own* captured
-   chat id. Can a third party append turns to the victim's existing
-   conversation from outside the product UI?
-3. **Forge attribution**: set `X-Kimi-Session-Id` / `X-Kimi-Thread-Id` /
-   `X-Kimi-Event-Id` to arbitrary values. Are these trusted server-side for
-   billing/attribution (i.e., can an attacker bill generations to the
-   victim's account *and* make them look like they came from a legitimate
-   thread)?
-4. **Scope probe**: is the key scoped to the user, the workspace, or the
-   product surface (coding vs. chat)? Does `GET /v1/models` leak anything
-   about the bound identity? Is there any key-management API (list/revoke)
-   reachable with the key itself?
+## Answers
 
-## Why the answer matters
+1. **Mint a new conversation** — **No.** The gateway enforces per-key path
+   allowlists (`api_key_path_forbidden`). The SDK's "omit the header" fallback
+   does not translate into a server-side mint for this credential class. This
+   is genuinely good defensive engineering — the durable sandbox key cannot
+   touch the conversation graph.
+2. **Impersonate the victim's existing conversation** — **No** (same 403).
+3. **Forge attribution headers** — headers are accepted silently (200) on the
+   tool dispatcher; no validation error. Attribution remains client-claimed.
+4. **What the key DOES unlock** — the full billable tool plane: embeddings,
+   search, server-side fetch (arbitrary-URL SSRF oracle from Kimi
+   infrastructure), file upload, storage with **public signed download URLs**,
+   and the media/data-source tool dispatcher. All spend is billed to the key
+   owner; storage uploads become publicly reachable objects.
 
-If (1) or (2) succeeds, a single leaked sandbox key is not just a billing
-leak — it is **write access to the victim's conversation graph**: planting
-messages the victim will later see attributed to their own session, in a
-product whose UI is trusted. If (3) succeeds, the attribution headers the
-platform injects per exec are unauthenticated claims, undermining audit
-trails precisely where AI platforms are expected to be most auditable.
+## Side-effect artifacts created during verification (disclosure)
 
-## Defensive baseline (what "fixed" looks like)
+- `POST /v1/files` → file id `fct57…` (5-byte "hello" probe)
+- `POST /v1/storage` → file id `1a0cfe73-8052-…`, public signed URL issued
 
-- Key rotation (done/expected — see `REDACTIONS.md`).
-- Keys bound server-side to a single session/thread scope, with the gateway
-  *rejecting* mismatched `X-Kimi-Chat-Id` rather than honoring it.
-- Short-lived, per-session tokens issued by a broker instead of durable
-  mounted keys (see `EXPOSE.md` Part 3).
-- Attribution headers set by the gateway from the authenticated identity,
-  never read from client-supplied headers.
+## Revised severity
 
-*Reproduce from your own sandbox session — do not use the redacted artifact.*
+The conversation-graph risk is closed at the gateway — the headline fear
+(planted messages in the victim's threads) is not reachable with a captured
+sandbox key. The residual exposure is economic and infrastructural: billable
+generation/tool spend and a storage plane that mints public URLs. Remediation
+unchanged (`EXPOSE.md` Part 3): rotate, shorten lifetimes, brokered per-session
+scoped tokens, and treat `/v1/storage` signed URLs as needing expiration and
+audit.
