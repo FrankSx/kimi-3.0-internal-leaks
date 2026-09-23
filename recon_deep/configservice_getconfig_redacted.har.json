@@ -1,0 +1,297 @@
+{
+ "log": {
+  "version": "1.2",
+  "creator": {
+   "name": "Firefox",
+   "version": "140.12.0"
+  },
+  "browser": {
+   "name": "Firefox",
+   "version": "140.12.0"
+  },
+  "pages": [
+   {
+    "id": "page_1",
+    "pageTimings": {
+     "onContentLoad": -4648,
+     "onLoad": -238
+    },
+    "startedDateTime": "2026-09-23T16:22:29.074-04:00",
+    "title": "https://www.kimi.ai/chat/1a0c7264-d822-8720-8000-097c637de52e?chat_enter_method=history"
+   }
+  ],
+  "entries": [
+   {
+    "startedDateTime": "2026-09-23T16:22:29.074-04:00",
+    "request": {
+     "bodySize": 33,
+     "method": "POST",
+     "url": "https://www.kimi.ai/apiv2/kimi.gateway.config.v1.ConfigService/GetConfig",
+     "httpVersion": "HTTP/2",
+     "headers": [
+      {
+       "name": "Host",
+       "value": "www.kimi.ai"
+      },
+      {
+       "name": "User-Agent",
+       "value": "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0"
+      },
+      {
+       "name": "Accept",
+       "value": "*/*"
+      },
+      {
+       "name": "Accept-Language",
+       "value": "en-US,en;q=0.5"
+      },
+      {
+       "name": "Accept-Encoding",
+       "value": "gzip, deflate, br, zstd"
+      },
+      {
+       "name": "Referer",
+       "value": "https://www.kimi.ai/chat/1a0c7264-d822-8720-8000-097c637de52e?chat_enter_method=history"
+      },
+      {
+       "name": "authorization",
+       "value": "Bearer eyJhbGciOiJIUzUxMi…[REDACTED — HS512 JWT, 15-min TTL, EXPIRED 2026-09-23T20:24:51Z; claims decoded below]"
+      },
+      {
+       "name": "connect-protocol-version",
+       "value": "1"
+      },
+      {
+       "name": "content-type",
+       "value": "application/json"
+      },
+      {
+       "name": "r-timezone",
+       "value": "America/New_York"
+      },
+      {
+       "name": "x-language",
+       "value": "en-US"
+      },
+      {
+       "name": "x-msh-device-id",
+       "value": "7674987196515888141"
+      },
+      {
+       "name": "x-msh-platform",
+       "value": "web"
+      },
+      {
+       "name": "x-msh-session-id",
+       "value": "1731546095810751428"
+      },
+      {
+       "name": "x-msh-version",
+       "value": "2.3.0"
+      },
+      {
+       "name": "x-traffic-id",
+       "value": "d5qv71c268gnjn3dknig"
+      },
+      {
+       "name": "Content-Length",
+       "value": "33"
+      },
+      {
+       "name": "Origin",
+       "value": "https://www.kimi.ai"
+      },
+      {
+       "name": "Connection",
+       "value": "keep-alive"
+      },
+      {
+       "name": "Cookie",
+       "value": "[REDACTED — intercom/ga cookies withheld]"
+      },
+      {
+       "name": "Sec-Fetch-Dest",
+       "value": "empty"
+      },
+      {
+       "name": "Sec-Fetch-Mode",
+       "value": "cors"
+      },
+      {
+       "name": "Sec-Fetch-Site",
+       "value": "same-origin"
+      },
+      {
+       "name": "Priority",
+       "value": "u=4"
+      },
+      {
+       "name": "TE",
+       "value": "trailers"
+      },
+      {
+       "name": "x-redaction-note",
+       "value": "Decoded JWT claims (token expired before publication): iss=account, aud=[kimi.ai], typ=access, app_id=kimi, sub=d5qv71c268gnjn3dknig (== portal probe creator_user_id, == x-traffic-id), abstract_user_id=d5qv71c268gnjn3dkhe0, ssid=1731546095810751428, device_id=7674987196515888141, region=overseas, membership.level=20, code_membership.level=20, iat=1790194191, exp=1790195091, jti=daq343treg6rpmg5cdsg"
+      }
+     ],
+     "cookies": [
+      {
+       "name": "_ga_Z0ZTEN03PZ",
+       "value": "[REDACTED]"
+      },
+      {
+       "name": "_ga",
+       "value": "[REDACTED]"
+      },
+      {
+       "name": "_clck",
+       "value": "[REDACTED]"
+      },
+      {
+       "name": "theme",
+       "value": "[REDACTED]"
+      },
+      {
+       "name": "g_state",
+       "value": "[REDACTED]"
+      },
+      {
+       "name": "_gcl_au",
+       "value": "[REDACTED]"
+      },
+      {
+       "name": "_ga_YXD8W70SZP",
+       "value": "[REDACTED]"
+      },
+      {
+       "name": "intercom-session-qhdj3uun",
+       "value": "[REDACTED]"
+      },
+      {
+       "name": "intercom-device-id-qhdj3uun",
+       "value": "[REDACTED]"
+      },
+      {
+       "name": "__snaker__id",
+       "value": "[REDACTED]"
+      },
+      {
+       "name": "gdxidpyhxdE",
+       "value": "[REDACTED]"
+      },
+      {
+       "name": "next-sidebar-entry-order",
+       "value": "[REDACTED]"
+      },
+      {
+       "name": "__cf_bm",
+       "value": "[REDACTED]"
+      }
+     ],
+     "queryString": [],
+     "headersSize": 2930,
+     "postData": {
+      "mimeType": "application/json",
+      "params": [],
+      "text": "{\"source\":\"CONFIG_SOURCE_SCRIPT\"}"
+     }
+    },
+    "response": {
+     "status": 200,
+     "statusText": "",
+     "httpVersion": "HTTP/2",
+     "headers": [
+      {
+       "name": "date",
+       "value": "Wed, 23 Sep 2026 20:22:29 GMT"
+      },
+      {
+       "name": "content-type",
+       "value": "application/json"
+      },
+      {
+       "name": "content-length",
+       "value": "2695"
+      },
+      {
+       "name": "server",
+       "value": "cloudflare"
+      },
+      {
+       "name": "x-internal-adhoc-canary",
+       "value": "498126716"
+      },
+      {
+       "name": "access-control-allow-origin",
+       "value": "*"
+      },
+      {
+       "name": "content-encoding",
+       "value": "gzip"
+      },
+      {
+       "name": "vary",
+       "value": "Origin"
+      },
+      {
+       "name": "vary",
+       "value": "accept-encoding"
+      },
+      {
+       "name": "x-server-span-id",
+       "value": "a808af6ccf8e0d16"
+      },
+      {
+       "name": "x-trace-id",
+       "value": "385c020e03a4495cfe140b1f6c622505"
+      },
+      {
+       "name": "x-user-region",
+       "value": "REGION_OVERSEA"
+      },
+      {
+       "name": "strict-transport-security",
+       "value": "max-age=31536000; includeSubDomains"
+      },
+      {
+       "name": "cf-cache-status",
+       "value": "DYNAMIC"
+      },
+      {
+       "name": "cf-ray",
+       "value": "a3fc42ffdcf8fe72-MEL"
+      },
+      {
+       "name": "X-Firefox-Spdy",
+       "value": "h2"
+      }
+     ],
+     "cookies": [],
+     "content": {
+      "mimeType": "application/json",
+      "size": 11687,
+      "text": "{\"config\":{\"system\":{\"activityPromoEnded\":true,\"blackFridayUrl\":\"https://kimi.com/campaign/black-friday-2025?hidenavbar=true\",\"blackFridayIcon\":\"https://kimi-img.kimi.ai/prod-chat-kimi/avatar/kimi/d4khm50u8ld3sqe99o20%2Fd4khm3ou8ld3sqe99o1g.png\",\"blackFridayIconEnabled\":true,\"blackFridayWebCharmUrl\":\"https://kimi-img.kimi.ai/prod-chat-kimi/avatar/kimi/d4u4goou8ld3sqedjesg%2Fd4u4gnou8ld3sqedjes0.png\",\"bananaPptState\":1,\"wpsAppId\":\"AK20251216OINQCL\",\"slidesConfig\":{\"bananaStyles\":[{\"id\":\"default\",\"name\":\"Default\",\"thumbnailUrl\":\"https://kimi-img.kimi.ai/pub/slides/bnn-style/1-apple.jpeg?x-oss-process=image/resize,w_200\"},{\"id\":\"bauhaus\",\"name\":\"Bauhaus\",\"thumbnailUrl\":\"https://kimi-img.kimi.ai/pub/slides/bnn-style/2-bauhaus.jpeg?x-oss-process=image/resize,w_200\"},{\"id\":\"documentary\",\"name\":\"Documentary\",\"thumbnailUrl\":\"https://kimi-img.kimi.ai/pub/slides/bnn-style/3-documentary.jpeg?x-oss-process=image/resize,w_200\"},{\"id\":\"blueprint\",\"name\":\"Blueprint\",\"thumbnailUrl\":\"https://kimi-img.kimi.ai/pub/slides/bnn-style/4-blueprint.jpeg?x-oss-process=image/resize,w_200\"},{\"id\":\"swiss\",\"name\":\"Swiss\",\"thumbnailUrl\":\"https://kimi-img.kimi.ai/pub/slides/bnn-style/5-swiss.jpeg?x-oss-process=image/resize,w_200\"},{\"id\":\"3d_clay\",\"name\":\"3D Clay\",\"thumbnailUrl\":\"https://kimi-img.kimi.ai/pub/slides/bnn-style/6-3D%20Clay.jpeg?x-oss-process=image/resize,w_200\"},{\"id\":\"memphis\",\"name\":\"Memphis\",\"thumbnailUrl\":\"https://kimi-img.kimi.ai/pub/slides/bnn-style/7-memphis.jpeg?x-oss-process=image/resize,w_200\"},{\"id\":\"comic\",\"name\":\"Comic\",\"thumbnailUrl\":\"https://kimi-img.kimi.ai/pub/slides/bnn-style/8-comic.jpeg?x-oss-process=image/resize,w_200\"},{\"id\":\"sketch\",\"name\":\"Sketch\",\"thumbnailUrl\":\"https://kimi-img.kimi.ai/pub/slides/bnn-style/9-sketch.jpeg?x-oss-process=image/resize,w_200\"},{\"id\":\"constructivism\",\"name\":\"Constructivism\",\"thumbnailUrl\":\"https://kimi-img.kimi.ai/pub/slides/bnn-style/10-constructivism.jpeg?x-oss-process=image/resize,w_200\"}]},\"okcConfig\":{\"ultraModeConfig\":{\"multiplier\":3,\"workerActions\":[\"Analyzing\",\"Searching\",\"Exploring\",\"Identifying\",\"Weighing\",\"Reasoning\",\"Reflecting\",\"Designing\",\"Writing\",\"Creating\",\"Evaluating\",\"Estimating","","Verifying","Integrating","Connecting","Processing","Advancing","Iterating","Optimizing","Improving","Acquiring","Extracting","Collecting"],"workersForLoading":[{"name":"Yanis","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/1.png","role":"Trend Forecaster"},{"name":"Gannon","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/2.png","role":"Progress Expediter"},{"name":"K","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/3.png","role":"Translation Expert"},{"name":"Hemingway","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/4.png","role":"Renowned Author"},{"name":"Parker","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/5.png","role":"Tactical Advisor"},{"name":"Dr. Li","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/6.png","role":"Project Manager"},{"name":"Zack","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/7.png","role":"Efficiency Optimizer"},{"name":"Miles","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/8.png","role":"Business Consultant"},{"name":"Trey","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/9.png","role":"Data Analyst"},{"name":"Rex","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/10.png","role":"Quality Control Expert"},{"name":"Grit","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/11.png","role":"Product Designer"},{"name":"Gafford","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/12.png","role":"Visual Design Expert"},{"name":"Sartre","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/13.png","role":"Industry Innovation Scholar"},{"name":"Matt","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/14.png","role":"Language Optimizer"},{"name":"Su","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/15.png","role":"Strategy Researcher"},{"name":"Ren","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/16.png","role":"Delivery Acceptance Specialist"},{"name":"Allen","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/17.png","role":"Data Scientist"},{"name":"Principal Winston","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/18.png","role":"Logic Deduction Expert"},{"name":"Cyclops","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/19.png","role":"Chief Industry Researcher"},{"name":"Toby","avatarUrl":"https://kimi-img.kimi.ai/pub/okc-agent/20.png","role":"Development Engineer"}],"workerIdleActions":["Taking a coffee break","Refilling my coffee","Brewing tea","Zoning out","Slacking off","Sunbathing","Stretching","Taking a nap","Taking a stroll","Listening to music","Whistling","Kicking back","In the break room","Watering the plants","Tidying my desk","Gazing out the window","Counting ceiling tiles","Refueling on caffeine","Recharging","Fully charged and ready","Just chilling","Ready to go","Waiting for tasks","Standing by at my desk","Pick me","Warming up","Grinding coffee beans","Folding paper planes","Straightening my badge","Nothing to report"]}},"domains":{"cdnDomains":["kimicdn.com","kimi.com","moonshot.cn","kimi-file.msdev.cc"]},"androidClawDownloadLink":"https://kimi-img.kimi.ai/app/download/android/kimiclaw_1.0.4.apk","clawGroupChatConfig":{"kimiclawInstallCmd":"bash <(curl -fsSL https://cdn.kimi.com/kimi-claw/claw-install.sh) --bot-token __TOKEN__"},"projectConfig":{"iconUrls":["https://kimi-img.kimi.ai/pub/project/icon/browser.png","https://kimi-img.kimi.ai/pub/project/icon/crescent-face.png","https://kimi-img.kimi.ai/pub/project/icon/blue-face.png","https://kimi-img.kimi.ai/pub/project/icon/moon.png","https://kimi-img.kimi.ai/pub/project/icon/piano.png","https://kimi-img.kimi.ai/pub/project/icon/prism.png","https://kimi-img.kimi.ai/pub/project/icon/computer.png","https://kimi-img.kimi.ai/pub/project/icon/envelope.png","https://kimi-img.kimi.ai/pub/project/icon/write.png","https://kimi-img.kimi.ai/pub/project/icon/full-moon.png","https://kimi-img.kimi.ai/pub/project/icon/robot.png","https://kimi-img.kimi.ai/pub/project/icon/coin.png","https://kimi-img.kimi.ai/pub/project/icon/herb.png","https://kimi-img.kimi.ai/pub/project/icon/graduation-cap.png","https://kimi-img.kimi.ai/pub/project/icon/shield.png","https://kimi-img.kimi.ai/pub/project/icon/lab.png","https://kimi-img.kimi.ai/pub/project/icon/rocket.png","https://kimi-img.kimi.ai/pub/project/icon/joystick.png","https://kimi-img.kimi.ai/pub/project/icon/butterfly.png","https://kimi-img.kimi.ai/pub/project/icon/search.png","https://kimi-img.kimi.ai/pub/project/icon/verified-check.png","https://kimi-img.kimi.ai/pub/project/icon/money-bag.png","https://kimi-img.kimi.ai/pub/project/icon/croissant.png","https://kimi-img.kimi.ai/pub/project/icon/see-no-evil-monkey.png","https://kimi-img.kimi.ai/pub/project/icon/turtle.png","https://kimi-img.kimi.ai/pub/project/icon/rainbow.png","https://kimi-img.kimi.ai/pub/project/icon/tutorial-guide.png","https://kimi-img.kimi.ai/pub/project/icon/news.png","https://kimi-img.kimi.ai/pub/project/icon/eyes.png","https://kimi-img.kimi.ai/pub/project/icon/pile-of-poo.png","https://kimi-img.kimi.ai/pub/project/icon/slightly-smiling-face.png","https://kimi-img.kimi.ai/pub/project/icon/flat-mouth-face.png","https://kimi-img.kimi.ai/pub/project/icon/grinning-face.png","https://kimi-img.kimi.ai/pub/project/icon/loudly-crying-face.png","https://kimi-img.kimi.ai/pub/project/icon/heart-eyes-face.png","https://kimi-img.kimi.ai/pub/project/icon/blowing-a-kiss.png","https://kimi-img.kimi.ai/pub/project/icon/smiling-face-with-hearts.png","https://kimi-img.kimi.ai/pub/project/icon/devil-face.png","https://kimi-img.kimi.ai/pub/project/icon/nauseated-face.png","https://kimi-img.kimi.ai/pub/project/icon/angry-face.png","https://kimi-img.kimi.ai/pub/project/icon/neutral-face.png","https://kimi-img.kimi.ai/pub/project/icon/cool-face.png","https://kimi-img.kimi.ai/pub/project/icon/grinning-with-sweat.png","https://kimi-img.kimi.ai/pub/project/icon/smiling-face.png","https://kimi-img.kimi.ai/pub/project/icon/tears-of-joy.png","https://kimi-img.kimi.ai/pub/project/icon/surprised-face.png","https://kimi-img.kimi.ai/pub/project/icon/ok-hand.png","https://kimi-img.kimi.ai/pub/project/icon/zany-face.png","https://kimi-img.kimi.ai/pub/project/icon/drooling-face.png","https://kimi-img.kimi.ai/pub/project/icon/nerd-face.png","https://kimi-img.kimi.ai/pub/project/icon/sleepy-face.png","https://kimi-img.kimi.ai/pub/project/icon/persevering-face.png","https://kimi-img.kimi.ai/pub/project/icon/flexed-biceps.png","https://kimi-img.kimi.ai/pub/project/icon/rock-on.png","https://kimi-img.kimi.ai/pub/project/icon/waving-hand.png","https://kimi-img.kimi.ai/pub/project/icon/pinching-hand.png","https://kimi-img.kimi.ai/pub/project/icon/thumbs-up.png","https://kimi-img.kimi.ai/pub/project/icon/thumbs-down.png","https://kimi-img.kimi.ai/pub/project/icon/folded-hands.png","https://kimi-img.kimi.ai/pub/project/icon/raised-hand.png","https://kimi-img.kimi.ai/pub/project/icon/raised-hands.png","https://kimi-img.kimi.ai/pub/project/icon/orange-heart.png","https://kimi-img.kimi.ai/pub/project/icon/purple-heart.png","https://kimi-img.kimi.ai/pub/project/icon/green-heart.png","https://kimi-img.kimi.ai/pub/project/icon/black-heart.png","https://kimi-img.kimi.ai/pub/project/icon/red-heart.png","https://kimi-img.kimi.ai/pub/project/icon/blue-heart.png","https://kimi-img.kimi.ai/pub/project/icon/two-hearts.png","https://kimi-img.kimi.ai/pub/project/icon/lightning.png"],"cases":[{"name":"Work Project","iconUrl":"https://kimi-img.kimi.ai/pub/project/icon/computer.png"},{"name":"Coding Project","iconUrl":"https://kimi-img.kimi.ai/pub/project/icon/browser.png"},{"name":"Content Creation","iconUrl":"https://kimi-img.kimi.ai/pub/project/icon/write.png"},{"name":"Learning & Research","iconUrl":"https://kimi-img.kimi.ai/pub/project/icon/tutorial-guide.png"},{"name":"Life & Personal","iconUrl":"https://kimi-img.kimi.ai/pub/project/icon/croissant.png"}],"enabled":true}},"feedback":{"items":[{"type":"FEEDBACK_TYPE_GENERAL","description":"General response","positiveOptions":["Accurate understanding","Strong task completion","Helpful","Good writing style"],"negativeOptions":["Misunderstood question","Task incomplete","Fabricated facts","Too verbose","Lacks creativity","Poor writing style"]},{"type":"FEEDBACK_TYPE_KIMI_V","description":"Search response / Multi-step search response","positiveOptions":["Accurate understanding","Strong task completion","Helpful","Good writing style","High quality references"],"negativeOptions":["Misunderstood question","Task incomplete","Fabricated facts","Too verbose","Lacks creativity","Poor writing style","Low quality references","Outdated information"]},{"type":"FEEDBACK_TYPE_GEN_IMAGE","description":"KimiV response","positiveOptions":["Strong task completion","Helpful","Good writing style","Accurate image understanding"],"negativeOptions":["Task incomplete","Fabricated facts","Too verbose","Lacks creativity","Incorrect image understanding","Incorrect image extraction"]},{"type":"FEEDBACK_TYPE_SEARCH","description":"Image/Video quote response","positiveOptions":["Strong task completion","Helpful","Good writing style","Appropriate image/video"],"negativeOptions":["Task incomplete","Fabricated facts","Too verbose","Lacks creativity","Poor writing style","Inappropriate image/video"]},{"type":"FEEDBACK_TYPE_MESSAGE_REF","description":"Why was this result unhelpful?","negativeOptions":["Factually incorrect","Citation does not support the response","Low quality source","Link not working"]}]}},"syncToken":"script-59-2.3.0-en-US-REGION_OVERSEA-caabfb760cae5b839c196053242cfaac"}"
+     },
+     "redirectURL": "",
+     "headersSize": 502,
+     "bodySize": 3197
+    },
+    "cache": {},
+    "timings": {
+     "blocked": -1,
+     "dns": 0,
+     "connect": 0,
+     "ssl": 0,
+     "send": 0,
+     "wait": 500,
+     "receive": 0
+    },
+    "time": 500,
+    "_securityState": "secure",
+    "serverIPAddress": "104.18.16.93",
+    "connection": "443",
+    "pageref": "page_1"
+   }
+  ]
+ }
+}
